@@ -1,0 +1,13 @@
+/AlgorithmUtils/target/classes/com/mmaracic/algorithms/*.class
+/AlgorithmUtils/nbactions.xml
+/AlgorithmUtils/target/classes/.netbeans_automatic_build
+/AlgorithmUtils/target/*.jar
+/AlgorithmUtils/target/maven-status/maven-compiler-plugin/compile/default-compile/*.lst
+/AlgorithmUtils/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/*.lst
+*.netbeans_automatic_build
+nbactions.xml
+pom.properties
+*.jar
+*.class
+*.lst
+/UceniciDodavanja/target/classes
