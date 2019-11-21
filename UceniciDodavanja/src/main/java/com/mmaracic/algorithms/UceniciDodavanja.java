@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * @author FEANOR-ROG
  * Kusalić str 234
  * Calculates connected components of the graph using flood fill bfs
+ * If the condition was before function call excess short calls could be avoided
  * 
  */
 public class UceniciDodavanja extends BaseAlgorithm{
