@@ -71,7 +71,8 @@ public abstract class BaseAlgorithm {
                             Logger.getLogger(BaseAlgorithm.class.getName()).log(Level.INFO, "Used memory: "+(memAfter-memBefore)+" bytes");
                         } catch (Exception ex) {
                             incorrectTests.add(inFile.getName());
-                            Logger.getLogger(BaseAlgorithm.class.getName()).log(Level.SEVERE, "Input file: "+inFile.getAbsolutePath()+" processed with error: "+ex.getMessage());                                
+                            Logger.getLogger(BaseAlgorithm.class.getName()).log(Level.SEVERE, "Input file: "+inFile.getAbsolutePath()+" processed with error: "+ex.getMessage());
+                            ex.printStackTrace();
                         } finally {
                             Logger.getLogger(BaseAlgorithm.class.getName()).log(Level.SEVERE, "Input file: "+inFile.getAbsolutePath()+" processed");
                         }
@@ -86,7 +87,7 @@ public abstract class BaseAlgorithm {
                 }
                 Logger.getLogger(BaseAlgorithm.class.getName()).log(Level.SEVERE, "Incorrect tests: "+incorrectTests.size());
                 for(String incorrectTest: incorrectTests){
-                    Logger.getLogger(BaseAlgorithm.class.getName()).log(Level.SEVERE, incorrectTest);                    
+                    Logger.getLogger(BaseAlgorithm.class.getName()).log(Level.SEVERE, incorrectTest);                  
                 }
             }
         } catch (ClassNotFoundException ex) {
