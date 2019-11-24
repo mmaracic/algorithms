@@ -11,3 +11,4 @@ pom.properties
 *.class
 *.lst
 /UceniciDodavanja/target/classes
+/UdaljenostGradova1/target/
