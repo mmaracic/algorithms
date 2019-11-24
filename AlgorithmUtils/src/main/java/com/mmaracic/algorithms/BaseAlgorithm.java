@@ -170,5 +170,30 @@ public abstract class BaseAlgorithm {
         return lists;
     }
 
+    protected int[] readIntegerArray(Scanner scanner, int noNumbers){
+        int[] numbers = new int[noNumbers];
+        return readIntegerArray(scanner, numbers, noNumbers);
+    }
+    
+    protected int[] readIntegerArray(Scanner scanner, int[] numbers, int noNumbers){
+        int index = 0;
+        while(scanner.hasNextInt() && index<noNumbers){
+            numbers[index] = scanner.nextInt();
+            index++;
+        }
+        if (index<noNumbers-1){
+            throw new IllegalStateException("Not enough integers found. Missing "+noNumbers);
+        }
+        return numbers;
+    }
+
+    protected int[][] readIntegerArray(Scanner scanner, int noLists, int noListNumbers){
+        int[][] numbers = new int[noLists][noListNumbers];
+        for(int i=0;i<noLists;i++){
+            readIntegerArray(scanner, numbers[i], noListNumbers);
+        }
+        return numbers;
+    }
+
     protected abstract boolean processTest(Scanner inFile, Scanner outFile);
 }
