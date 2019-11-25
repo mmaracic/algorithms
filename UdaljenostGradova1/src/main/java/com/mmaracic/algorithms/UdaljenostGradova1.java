@@ -7,8 +7,15 @@ package com.mmaracic.algorithms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +26,8 @@ import java.util.logging.Logger;
  * https://www.hackerrank.com/challenges/dijkstrashortreach/problem
  * Samples and code Modified to fit hackerrank format
  * Dijkstra basic implementation
+ * Watch for multiple paths between two cities
+ * Always look for the unprocessed node closest to the INITIAL node
  */
 public class UdaljenostGradova1 extends BaseAlgorithm{
 
@@ -34,6 +43,7 @@ public class UdaljenostGradova1 extends BaseAlgorithm{
             road[1]+=cityIndexCorrection;
         }
         int[] paths = calculateShortestPath(noCities, roads, initCity);
+        System.out.println(Arrays.toString(paths));
         int[] correctPaths = readIntegerArray(outFile, noCities-1);
         if (correctPaths.length != paths.length){
             Logger.getLogger(UdaljenostGradova1.class.getName()).log(Level.SEVERE, "Length of distances not correct: "+paths.length);
@@ -57,50 +67,74 @@ public class UdaljenostGradova1 extends BaseAlgorithm{
      * @return distance from the initial city to all other cities
      */
     int[] calculateShortestPath(int n, int[][] edges, int s){
-        int[] distances = new int[n];
-        List<Boolean> visited = new ArrayList();
-        List<List<List<Integer>>> cities = new ArrayList<>();
+        Set<Integer> visited = new HashSet();
+        List<Map<Integer, Integer>> cities = new ArrayList<>();
+        Map<Integer, Integer> distances = new HashMap();
+        //initial values
         for(int i=0; i<n; i++){
-            distances[i]=Integer.MAX_VALUE;
-            visited.add(Boolean.FALSE);
-            cities.add(new ArrayList<List<Integer>>());
+            if (i != s-1){
+                distances.put(i, Integer.MAX_VALUE);
+            } else {
+                distances.put(i, 0);
+            }
+            visited.add(i);
+            cities.add(new HashMap<>());
         }
+        //processing edges
         for(int[] road: edges){
             int source = road[0];
             int destination = road[1];
             int distance = road[2];
-            cities.get(source-1).add(Arrays.asList(destination-1, distance));
-            cities.get(destination-1).add(Arrays.asList(source-1, distance));
+            Map<Integer, Integer> sourceCity = cities.get(source-1);
+            //taking care for multiple paths between two nodes, take only shortest
+            if (!sourceCity.containsKey(destination-1) ||
+                    (sourceCity.containsKey(destination-1) && sourceCity.get(destination-1)>distance)){
+                sourceCity.put(destination-1, distance);
+            }
+            Map<Integer, Integer> destinationCity = cities.get(destination-1);
+            if (!destinationCity.containsKey(source-1) ||
+                    (destinationCity.containsKey(source-1) && destinationCity.get(source-1)>distance)){
+                destinationCity.put(source-1, distance);
+            }
         }
-        distances[s-1]=0;
+       
+        //dijkstra processing
         visit(s-1, cities, visited, distances);
+        
+        //skipping initial node and setting unreachable value
         int[] otherDistances = new int[n-1];
-        for(int i=0, j=0; i<distances.length; i++){
+        for(int i=0, j=0; i<n; i++){
             if (i != s-1){
-                otherDistances[j] = (distances[i]<Integer.MAX_VALUE)?distances[i]:-1;
+                otherDistances[j] = (distances.get(i)<Integer.MAX_VALUE)?distances.get(i):-1;
                 j++;
             }
         }
-        System.out.println(Arrays.toString(otherDistances));
         return otherDistances;
     }
     
-    void visit(int cityIndex, List<List<List<Integer>>> cities, List<Boolean> visited, int[] distances){
-        visited.set(cityIndex, Boolean.TRUE);
-        int cityDistance = distances[cityIndex];
-        List<List<Integer>> roads = cities.get(cityIndex);
-        for (List<Integer> road: roads){
-            int targetCity = road.get(0);
-            int newTargetDistance = cityDistance + road.get(1);
-            if (distances[targetCity]>newTargetDistance){
-                distances[targetCity] = newTargetDistance;
+    void visit(int cityIndex, List<Map<Integer, Integer>> cities, Set<Integer> visited, Map<Integer, Integer> distances){
+        visited.remove(cityIndex);
+        int cityDistance = distances.get(cityIndex);
+        Map<Integer, Integer> roads = cities.get(cityIndex);
+        for (Entry<Integer, Integer> road: roads.entrySet()){
+            int targetCity = road.getKey();
+            int oldTargetDistance = distances.get(targetCity);
+            int newTargetDistance = cityDistance + road.getValue();
+            if (oldTargetDistance>newTargetDistance){
+                distances.put(targetCity, newTargetDistance);
             }
         }
-        for (List<Integer> road: roads){
-            int targetCity = road.get(0);
-            if (!visited.get(targetCity)){
-                visit(targetCity, cities, visited, distances);
+        int shortestDistance = Integer.MAX_VALUE;
+        int nearestUnvisitedCity = -1;
+        for (Integer unvisitedCity: visited){
+            int unvisitedDistance = distances.get(unvisitedCity);
+            if (unvisitedDistance<shortestDistance && visited.contains(unvisitedCity)){
+                shortestDistance = unvisitedDistance;
+                nearestUnvisitedCity = unvisitedCity;
             }            
+        }
+        if (nearestUnvisitedCity!=-1 && shortestDistance != Integer.MAX_VALUE){
+            visit(nearestUnvisitedCity, cities, visited, distances);
         }
     }
     
