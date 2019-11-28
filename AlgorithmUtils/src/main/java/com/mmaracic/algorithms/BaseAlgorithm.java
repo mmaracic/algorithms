@@ -182,7 +182,7 @@ public abstract class BaseAlgorithm {
             index++;
         }
         if (index<noNumbers-1){
-            throw new IllegalStateException("Not enough integers found. Missing "+noNumbers);
+            throw new IllegalStateException("Not enough integers found. Missing "+(noNumbers-index));
         }
         return numbers;
     }
@@ -195,5 +195,42 @@ public abstract class BaseAlgorithm {
         return numbers;
     }
 
+    protected double readDouble(Scanner scanner){
+        if (scanner.hasNextDouble()){
+            return scanner.nextDouble();
+        } else {
+            throw new IllegalStateException("Double not found.");
+        }
+    }
+    
+    protected List<Double> readDoubleList(Scanner scanner, int noNumbers){
+        List<Double> numbers = new ArrayList<>();
+        while(scanner.hasNextDouble()&& noNumbers>0){
+            numbers.add(scanner.nextDouble());
+            noNumbers--;
+        }
+        if (noNumbers>0){
+            throw new IllegalStateException("Not enough doubles found. Missing "+noNumbers);
+        }
+        return numbers;
+    }
+
+    protected double[] readDoubleArray(Scanner scanner, int noNumbers){
+        double[] numbers = new double[noNumbers];
+        return readDoubleArray(scanner, numbers, noNumbers);
+    }
+    
+    protected double[] readDoubleArray(Scanner scanner, double[] numbers, int noNumbers){
+        int index = 0;
+        while(scanner.hasNextDouble()&& index<noNumbers){
+            numbers[index] = scanner.nextDouble();
+            index++;
+        }
+        if (index<noNumbers-1){
+            throw new IllegalStateException("Not enough doubles found. Missing "+(noNumbers-index));
+        }
+        return numbers;
+    }
+    
     protected abstract boolean processTest(Scanner inFile, Scanner outFile);
 }
