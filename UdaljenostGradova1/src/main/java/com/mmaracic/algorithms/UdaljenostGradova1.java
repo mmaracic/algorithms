@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
@@ -67,9 +65,9 @@ public class UdaljenostGradova1 extends BaseAlgorithm{
      * @return distance from the initial city to all other cities
      */
     int[] calculateShortestPath(int n, int[][] edges, int s){
-        Set<Integer> visited = new HashSet();
-        List<Map<Integer, Integer>> cities = new ArrayList<>();
-        Map<Integer, Integer> distances = new HashMap();
+        Set<Integer> visited = new HashSet(n);
+        List<Map<Integer, Integer>> cities = new ArrayList<>(n);
+        Map<Integer, Integer> distances = new HashMap(n);
         //initial values
         for(int i=0; i<n; i++){
             if (i != s-1){
