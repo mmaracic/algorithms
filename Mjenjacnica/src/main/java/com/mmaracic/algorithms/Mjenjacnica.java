@@ -14,6 +14,7 @@ import java.util.logging.Logger;
  * @author FEANOR-ROG
  * Kusalić299
  * Dynamic programming
+ * Can be solved in O(1) spatial complexity without the array
  */
 public class Mjenjacnica extends BaseAlgorithm{
 
